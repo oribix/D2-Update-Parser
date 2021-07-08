@@ -1,0 +1,33 @@
+{
+  "name": "d2-update-parser",
+  "version": "1.0.0",
+  "description": "Destiny 2 releases regular updates. This is meant to get the update, parse it, then format it for use with mediawiki.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && node dist/D2UpdateParser.js",
+    "clean": "rm -rf dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oribix/D2-Update-Parser.git"
+  },
+  "keywords": [
+    "d2",
+    "update",
+    "parser"
+  ],
+  "author": "Marco Morelos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oribix/D2-Update-Parser/issues"
+  },
+  "homepage": "https://github.com/oribix/D2-Update-Parser#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "typescript": "^4.3.5"
+  }
+}
