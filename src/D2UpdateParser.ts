@@ -1,19 +1,14 @@
-import axios from 'axios';
 import {
   ContentItemPublicContract,
-  HttpClientConfig,
   SearchContentWithTextParams,
-  SearchResultOfContentItemPublicContract,
-  ServerResponse,
 } from 'bungie-api-ts/content';
-import { HttpClient } from 'bungie-api-ts/http';
 import BungieContentAPIController from './BungieContentAPIController';
 import BungieNewsArticle from './BungieNewsArticle';
-import ConfigService from './ConfigService';
 import HtmlToWikiTranslator from './HtmlToWikiTranslator';
-import { BungieContentService as BungieContentAPI } from './interfaces/BungieContentService';
+import { BungieContentAPI } from './interfaces/BungieContentAPI';
 import { WikiTranslator } from './interfaces/WikiTranslator';
-const contentService: BungieContentAPI = new BungieContentAPIController();
+
+const contentService: BungieContentAPI = BungieContentAPIController.getInstance();
 
 /**
  * The Destiny 2 Update Parser turns a D2 update into a mediawiki page
@@ -42,9 +37,9 @@ class D2UpdateParser {
   static async getNewsContent(): Promise<BungieNewsArticle[]> {
     let fullResults: ContentItemPublicContract[] = [];
 
-    let pageNumber = 46;
+    let pageNumber = 1;
     let hasMorePages = true;
-    const maxPageDepth = 50;
+    const maxPageDepth = 5;
     do {
       try {
         // eslint-disable-next-line no-await-in-loop

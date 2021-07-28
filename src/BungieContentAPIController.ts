@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { ServerResponse } from "bungie-api-ts/common";
 import {
   GetContentTypeParams,
@@ -12,10 +12,30 @@ import {
   HttpClientConfig,
 } from "bungie-api-ts/content";
 import ConfigService from "./ConfigService";
-import { BungieContentService } from "./interfaces/BungieContentService";
+import { BungieContentAPI } from "./interfaces/BungieContentAPI";
 
-export default class BungieContentAPIController implements BungieContentService {
-  private static BUNGIE = 'https://www.bungie.net/Platform';
+export default class BungieContentAPIController implements BungieContentAPI {
+  private BUNGIE = 'https://www.bungie.net/Platform';
+
+  /**
+   * httprequest client
+   */
+  private client: AxiosInstance;
+
+  /**
+   * singleton pattern instance
+   */
+  private static instance: BungieContentAPIController;
+
+  private constructor() {
+    this.client = axios.create({
+      baseURL: this.BUNGIE,
+      headers: {
+        'x-api-key': ConfigService.getConfig().bungieApiKey,
+        'User-Agent': 'D2UpdateParser',
+      },
+    });
+  }
 
   getContentType(
     params: GetContentTypeParams,
@@ -45,9 +65,7 @@ export default class BungieContentAPIController implements BungieContentService 
       params,
     };
 
-    return BungieContentAPIController
-      .$http(config) as
-        Promise<ServerResponse<SearchResultOfContentItemPublicContract>>;
+    return this.$http<SearchResultOfContentItemPublicContract>(config);
   }
 
   searchContentByTagAndType(
@@ -62,16 +80,29 @@ export default class BungieContentAPIController implements BungieContentService 
     throw new Error("Method not implemented.");
   }
 
-  private static async $http(config: HttpClientConfig): Promise<any> {
-    return axios({
-      method: config.method,
-      url: config.url,
-      headers: {
-        'x-api-key': ConfigService.getConfig().bungieApiKey,
-        'User-Agent': 'D2UpdateParser',
-      },
-      params: config.params,
-      baseURL: this.BUNGIE,
-    }).then((axiosResponse) => axiosResponse.data);
+  private async $http<T>(config: HttpClientConfig): Promise<ServerResponse<T>> {
+    const {
+      method,
+      url,
+      params,
+    } = config;
+    return this.getClient()
+      .request({ method, url, params })
+      .then((axiosResponse) => axiosResponse.data as ServerResponse<T>);
+  }
+
+  /**
+   * @returns instance of API Controller
+   */
+  public static getInstance(): BungieContentAPIController {
+    if (!BungieContentAPIController.instance) {
+      BungieContentAPIController.instance = new BungieContentAPIController();
+    }
+
+    return BungieContentAPIController.instance;
+  }
+
+  private getClient(): AxiosInstance {
+    return this.client;
   }
 }

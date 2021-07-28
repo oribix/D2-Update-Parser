@@ -10,7 +10,7 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/content';
 
-export interface BungieContentService {
+export interface BungieContentAPI {
   getContentType(
     params: GetContentTypeParams
   ): Promise<ServerResponse<ContentTypeDescription>>;
