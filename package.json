@@ -4,7 +4,7 @@
   "description": "Destiny 2 releases regular updates. This is meant to get the update, parse it, then format it for use with mediawiki.",
   "main": "D2UpdateParser.js",
   "scripts": {
-    "test": "tsc && node dist/D2UpdateParser.js",
+    "test": "mocha",
     "clean": "rm -rf dist/"
   },
   "repository": {
@@ -33,7 +33,9 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "@types/fs-extra": "^9.0.12",
     "axios": "^0.21.1",
-    "bungie-api-ts": "^4.9.0"
+    "bungie-api-ts": "^4.9.0",
+    "fs-extra": "^10.0.0"
   }
 }

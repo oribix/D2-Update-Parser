@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node14/tsconfig.json",
 
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "./src/",
     "outDir": "./dist/"
   },
 
