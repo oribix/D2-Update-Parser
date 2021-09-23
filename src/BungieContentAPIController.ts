@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from "axios";
-import { ServerResponse } from "bungie-api-ts/common";
+import axios, { AxiosInstance } from 'axios';
+import { ServerResponse } from 'bungie-api-ts/common';
 import {
   GetContentTypeParams,
   GetContentByIdParams,
@@ -10,13 +10,18 @@ import {
   SearchHelpArticlesParams,
   ContentTypeDescription,
   HttpClientConfig,
-} from "bungie-api-ts/content";
-import ConfigService from "./ConfigService";
-import { BungieContentAPI } from "./interfaces/BungieContentAPI";
+  getContentType,
+  getContentById,
+  getContentByTagAndType,
+  searchContentWithText,
+  searchContentByTagAndType,
+  SearchContentByTagAndTypeParams,
+  searchHelpArticles,
+} from 'bungie-api-ts/content';
+import ConfigService from './ConfigService.js';
+import { BungieContentAPI } from './interfaces/BungieContentAPI';
 
 export default class BungieContentAPIController implements BungieContentAPI {
-  private BUNGIE = 'https://www.bungie.net/Platform';
-
   /**
    * httprequest client
    */
@@ -29,7 +34,7 @@ export default class BungieContentAPIController implements BungieContentAPI {
 
   private constructor() {
     this.client = axios.create({
-      baseURL: this.BUNGIE,
+      // baseURL: this.BUNGIE,
       headers: {
         'x-api-key': ConfigService.getConfig().bungieApiKey,
         'User-Agent': 'D2UpdateParser',
@@ -40,55 +45,49 @@ export default class BungieContentAPIController implements BungieContentAPI {
   getContentType(
     params: GetContentTypeParams,
   ): Promise<ServerResponse<ContentTypeDescription>> {
-    throw new Error("Method not implemented.");
+    return getContentType(this.$http.bind(this), params);
   }
 
   getContentById(
     params: GetContentByIdParams,
   ): Promise<ServerResponse<ContentItemPublicContract>> {
-    throw new Error("Method not implemented.");
+    return getContentById(this.$http.bind(this), params);
   }
 
   getContentByTagAndType(
     params: GetContentByTagAndTypeParams,
   ): Promise<ServerResponse<ContentItemPublicContract>> {
-    throw new Error("Method not implemented.");
+    return getContentByTagAndType(this.$http.bind(this), params);
   }
 
   searchContentWithText(
     params: SearchContentWithTextParams,
   ): Promise<ServerResponse<SearchResultOfContentItemPublicContract>> {
-    const { locale } = params;
-    const config: HttpClientConfig = {
-      method: 'GET',
-      url: `/Content/Search/${locale}/`,
-      params,
-    };
-
-    return this.$http<SearchResultOfContentItemPublicContract>(config);
+    return searchContentWithText(this.$http.bind(this), params);
   }
 
   searchContentByTagAndType(
-    params: SearchContentWithTextParams,
+    params: SearchContentByTagAndTypeParams,
   ): Promise<ServerResponse<SearchResultOfContentItemPublicContract>> {
-    throw new Error("Method not implemented.");
+    return searchContentByTagAndType(this.$http.bind(this), params);
   }
 
   searchHelpArticles(
     params: SearchHelpArticlesParams,
   ): Promise<ServerResponse<object>> {
-    throw new Error("Method not implemented.");
+    return searchHelpArticles(this.$http.bind(this), params);
   }
 
-  private async $http<T>(config: HttpClientConfig): Promise<ServerResponse<T>> {
-    const {
-      method,
-      url,
-      params,
-    } = config;
-    return this.getClient()
-      .request({ method, url, params })
-      .then((axiosResponse) => axiosResponse.data as ServerResponse<T>);
+  /** Http Client */
+  private async $http(config: HttpClientConfig) {
+    const client = this.getClient();
+    const axiosResponse = await client.request({
+      method: config.method,
+      url: config.url,
+      params: config.params,
+      data: config.body,
+    });
+    return axiosResponse.data;
   }
 
   /**

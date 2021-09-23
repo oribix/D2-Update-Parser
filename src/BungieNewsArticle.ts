@@ -7,6 +7,14 @@ export default class BungieNewsArticle {
     this.article = article;
   }
 
+  public static create(article: ContentItemPublicContract): BungieNewsArticle {
+    return new BungieNewsArticle(article);
+  }
+
+  public static createAll(articles: ContentItemPublicContract[]): BungieNewsArticle[] {
+    return articles.map(BungieNewsArticle.create);
+  }
+
   /**
    * @returns Title
    */
@@ -49,6 +57,10 @@ export default class BungieNewsArticle {
    */
   getMobileTitle(): string {
     return this.getProperty('MobileTitle');
+  }
+
+  getCreationDate(): string {
+    return this.getArticle().creationDate;
   }
 
   /**

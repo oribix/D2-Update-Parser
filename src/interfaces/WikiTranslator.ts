@@ -1,3 +1,3 @@
 export interface WikiTranslator {
-  translate(): string
+  translate(): Promise<string>
 }

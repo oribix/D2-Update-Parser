@@ -1,5 +1,5 @@
-import { ContentTypeDescription } from 'bungie-api-ts/content';
 import {
+  ContentTypeDescription,
   ContentItemPublicContract,
   GetContentByIdParams,
   GetContentByTagAndTypeParams,

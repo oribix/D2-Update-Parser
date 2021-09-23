@@ -1,4 +1,4 @@
-import { readJSONSync } from 'fs-extra';
+import fs from 'fs-extra';
 
 interface Config {
   bungieApiKey: string;
@@ -11,7 +11,7 @@ export default class ConfigService {
 
   static getConfig(): Config {
     if (!ConfigService.config) {
-      this.config = readJSONSync(this.CONFIG_FP) as Config;
+      this.config = fs.readJSONSync(this.CONFIG_FP) as Config;
     }
     return ConfigService.config;
   }
