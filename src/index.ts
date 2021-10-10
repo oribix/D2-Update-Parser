@@ -1,14 +1,14 @@
 import fs from 'fs-extra';
 import Mustache from 'mustache';
 import BungieNewsArticle from './BungieNewsArticle.js';
-import PatchArticleFetcher from './PatchArticleFetcher.js';
+import UpdateArticleFetcher from './UpdateArticleFetcher.js';
 import UpdateWikiPageFactory from './UpdateWikiPageFactory.js';
 
 class App {
   public static async main() {
     this.init();
 
-    const patchArticleFetcher = PatchArticleFetcher.getInstance();
+    const patchArticleFetcher = UpdateArticleFetcher.getInstance();
     const articles = await patchArticleFetcher.getByPageRange(1, 5);
     articles.forEach((article) => {
       const fp = this.getFilePath(article);

@@ -3,8 +3,8 @@ import BungieNewsArticle from './BungieNewsArticle.js';
 import { NewsArticleFetcher } from './interfaces/ArticleFetcher';
 import { BungieContentAPI } from './interfaces/BungieContentAPI';
 
-export default class PatchArticleFetcher implements NewsArticleFetcher {
-  private static instance: PatchArticleFetcher;
+export default class UpdateArticleFetcher implements NewsArticleFetcher {
+  private static instance: UpdateArticleFetcher;
 
   private contentAPI: BungieContentAPI;
 
@@ -12,9 +12,9 @@ export default class PatchArticleFetcher implements NewsArticleFetcher {
     this.contentAPI = BungieContentAPIController.getInstance();
   }
 
-  public static getInstance(): PatchArticleFetcher {
+  public static getInstance(): UpdateArticleFetcher {
     if (!this.instance) {
-      this.instance = new PatchArticleFetcher();
+      this.instance = new UpdateArticleFetcher();
     }
     return this.instance;
   }
@@ -37,7 +37,7 @@ export default class PatchArticleFetcher implements NewsArticleFetcher {
       articles.push(...results);
     } catch (e) { /** do nothing */ }
 
-    return PatchArticleFetcher.filter(articles);
+    return UpdateArticleFetcher.filter(articles);
   }
 
   async getByPageRange(startPage: number, endPage: number): Promise<BungieNewsArticle[]> {
@@ -52,7 +52,7 @@ export default class PatchArticleFetcher implements NewsArticleFetcher {
       }
     } catch (e) { /** do nothing */ }
 
-    return PatchArticleFetcher.filter(articles);
+    return UpdateArticleFetcher.filter(articles);
   }
 
   private async searchNewsContentPage(pageNumber: number) {
@@ -67,7 +67,7 @@ export default class PatchArticleFetcher implements NewsArticleFetcher {
   }
 
   private static filter(articles: BungieNewsArticle[]) {
-    return articles.filter(PatchArticleFetcher.isDestiny2Patch);
+    return articles.filter(UpdateArticleFetcher.isDestiny2Patch);
   }
 
   /**
