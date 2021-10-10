@@ -1,0 +1,13 @@
+{{=<% %>=}}
+{{Version Infobox
+<%={{ }}=%>
+| Image = {{Image}}
+| Type = {{UpdateType}}
+| Version ID = {{Version}}
+| Released = {{ReleaseDate}}
+| Description = {{Description}}
+| Highlights = {{Highlights}}
+| link = [{{Link}} {{Version}} {{UpdateType}} Notes]
+| prev = {{Prev}}
+| next = {{Next}}
+}}

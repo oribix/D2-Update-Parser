@@ -30,6 +30,13 @@ export default class BungieNewsArticle {
   }
 
   /**
+   * @returns Article Summary
+   */
+  getSummary(): string {
+    return this.getProperty('Summary');
+  }
+
+  /**
    * @param article
    * @returns article html content
    */
@@ -61,6 +68,16 @@ export default class BungieNewsArticle {
 
   getCreationDate(): string {
     return this.getArticle().creationDate;
+  }
+
+  getContentID(): string {
+    return this.getArticle().contentId;
+  }
+
+  getArticleLink(): string {
+    const contentID = this.getContentID();
+    const link = `https://www.bungie.net/en/Explore/Detail/News/${contentID}`;
+    return link;
   }
 
   /**

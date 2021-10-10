@@ -1,25 +1,26 @@
 import fs from 'fs-extra';
+import Mustache from 'mustache';
 import BungieNewsArticle from './BungieNewsArticle.js';
-import D2UpdateParser from './D2UpdateParser.js';
 import PatchArticleFetcher from './PatchArticleFetcher.js';
+import UpdateWikiPageFactory from './UpdateWikiPageFactory.js';
 
 class App {
   public static async main() {
+    this.init();
+
     const patchArticleFetcher = PatchArticleFetcher.getInstance();
     const articles = await patchArticleFetcher.getByPageRange(1, 5);
     articles.forEach((article) => {
-      this.buildWikiArticle(article);
+      const fp = this.getFilePath(article);
+      const pageFactory = new UpdateWikiPageFactory(article);
+      fs.ensureFile(fp)
+        .then(() => pageFactory.create())
+        .then((page) => fs.writeFile(fp, page));
     });
   }
 
-  public static async buildWikiArticle(article: BungieNewsArticle): Promise<void> {
-    const content = await D2UpdateParser.parse(article);
-    const title: string = article.getTitle();
-    const date = article.getCreationDate();
-
-    const fp = this.getFilePath(article);
-    await fs.ensureFile(fp);
-    await fs.writeFile(fp, content);
+  public static init(): void {
+    Mustache.escape = (text) => text;
   }
 
   private static getFilePath(article: BungieNewsArticle): string {
