@@ -11,21 +11,38 @@ export default class UpdateWikiPageFactory {
 
   private article: BungieNewsArticle;
 
+  private vboxFactory: VersionInfoBoxFactory | undefined;
+
   constructor(article: BungieNewsArticle) {
     this.article = article;
   }
 
   public async create(): Promise<string> {
-    const article = this.getArticle();
     const template = UpdateWikiPageFactory.getTemplate();
 
-    const vboxFactory = new VersionInfoBoxFactory(article);
     const page = {
-      content: await D2UpdateParser.parse(article),
-      versionInfoBox: vboxFactory.create(),
+      content: await this.getParsedArticleContent(),
+      versionInfoBox: this.getVersionInfoBoxContent(),
     };
 
-    return Mustache.render(template.toString(), page);
+    return Mustache.render(template, page);
+  }
+
+  private async getParsedArticleContent(): Promise<string> {
+    const article = this.getArticle();
+    const updateParser = new D2UpdateParser(article);
+    let content: string;
+    try {
+      content = await updateParser.parse();
+    } catch (error) {
+      content = '';
+    }
+    return content;
+  }
+
+  private getVersionInfoBoxContent(): string {
+    const vboxFactory = this.getVersionInfoBoxFactory();
+    return vboxFactory.create();
   }
 
   private static getTemplate(): string {
@@ -35,6 +52,18 @@ export default class UpdateWikiPageFactory {
     }
 
     return UpdateWikiPageFactory.pageTemplate;
+  }
+
+  private getVersionInfoBoxFactory(): VersionInfoBoxFactory {
+    if (!this.vboxFactory) {
+      this.vboxFactory = new VersionInfoBoxFactory(this.getArticle());
+    }
+
+    return this.vboxFactory;
+  }
+
+  public setVersionInfoBoxFactory(vboxFactory: VersionInfoBoxFactory): void {
+    this.vboxFactory = vboxFactory;
   }
 
   private getArticle(): BungieNewsArticle {

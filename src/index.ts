@@ -3,16 +3,23 @@ import Mustache from 'mustache';
 import BungieNewsArticle from './BungieNewsArticle.js';
 import UpdateArticleFetcher from './UpdateArticleFetcher.js';
 import UpdateWikiPageFactory from './UpdateWikiPageFactory.js';
+import VersionInfoBoxFactory from './VersionInfoBoxFactory.js';
 
 class App {
   public static async main() {
     this.init();
 
-    const patchArticleFetcher = UpdateArticleFetcher.getInstance();
-    const articles = await patchArticleFetcher.getByPageRange(1, 5);
-    articles.forEach((article) => {
+    const updateFetcher = UpdateArticleFetcher.getInstance();
+    const articles = await updateFetcher.getByPageRange(1, 15);
+    articles.reverse().forEach((article, i) => {
       const fp = this.getFilePath(article);
+
+      const vboxFactory = new VersionInfoBoxFactory(article);
+      vboxFactory.setPrevUpdate(articles[i - 1]);
+      vboxFactory.setNextUpdate(articles[i + 1]);
+
       const pageFactory = new UpdateWikiPageFactory(article);
+      pageFactory.setVersionInfoBoxFactory(vboxFactory);
       fs.ensureFile(fp)
         .then(() => pageFactory.create())
         .then((page) => fs.writeFile(fp, page));

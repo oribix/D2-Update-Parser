@@ -9,15 +9,18 @@ export default class VersionInfoBoxFactory {
 
   private article: BungieNewsArticle;
 
+  private prevUpdate: BungieNewsArticle | undefined;
+
+  private nextUpdate: BungieNewsArticle | undefined;
+
   constructor(article: BungieNewsArticle) {
     this.article = article;
   }
 
-  public create(opt?: {
-    prev: BungieNewsArticle,
-    next: BungieNewsArticle,
-  }): string {
+  public create(): string {
     const template = VersionInfoBoxFactory.getTemplate();
+    const prev = this.getPrevUpdate();
+    const next = this.getNextUpdate();
     return Mustache.render(template, {
       Image: this.getImage(),
       UpdateType: this.getVersionType(),
@@ -26,8 +29,11 @@ export default class VersionInfoBoxFactory {
       Description: this.getArticle().getSubtitle(),
       Highlights: '',
       Link: this.getArticle().getArticleLink(),
-      Prev: opt ? this.getVersion(opt.prev) : '',
-      Next: opt ? this.getVersion(opt.next) : '',
+      Prev: prev ? this.getVersion(prev) : '',
+      Next: next ? this.getVersion(next) : '',
+      Title: this.getArticle().getTitle(),
+      Author: this.getArticle().getAuthorDisplayName(),
+      DateMLA: this.getMLAFormattedDate(),
     });
   }
 
@@ -73,10 +79,11 @@ export default class VersionInfoBoxFactory {
     return '';
   }
 
-  private getFormattedDate() {
+  private getFormattedDate(): string {
     const article = this.getArticle();
     const isoDateTime: string = article.getCreationDate();
     const date = new Date(isoDateTime);
+
     return date.toLocaleString('en-US', {
       day: 'numeric',
       month: 'long',
@@ -84,8 +91,39 @@ export default class VersionInfoBoxFactory {
     });
   }
 
+  private getMLAFormattedDate(): string {
+    const article = this.getArticle();
+    const isoDateTime: string = article.getCreationDate();
+    const date = new Date(isoDateTime);
+
+    const longMonth = date.toLocaleString('en-US', { month: 'long' });
+    const shortMonth = date.toLocaleString('en-US', { month: 'short' });
+    const isAbbreviatedMonth = shortMonth.length < longMonth.length;
+    const month = isAbbreviatedMonth ? `${shortMonth}.` : shortMonth;
+    const day = date.toLocaleString('en-US', { day: 'numeric' });
+    const year = date.toLocaleString('en-US', { year: 'numeric' });
+
+    return `${day} ${month} ${year}`;
+  }
+
   private getArticle(): BungieNewsArticle {
     return this.article;
+  }
+
+  private getPrevUpdate(): BungieNewsArticle | undefined {
+    return this.prevUpdate;
+  }
+
+  public setPrevUpdate(update: BungieNewsArticle) {
+    this.prevUpdate = update;
+  }
+
+  private getNextUpdate(): BungieNewsArticle | undefined {
+    return this.nextUpdate;
+  }
+
+  public setNextUpdate(update: BungieNewsArticle) {
+    this.nextUpdate = update;
   }
 
   private static getTemplate(): string {
