@@ -8,6 +8,7 @@ export default class MarkupArtifactCleaner {
   fixArtifacts(): void {
     this.fixBreakTags();
     this.fixBulletIndentation();
+    this.removeDivs();
     this.collapseNewlines();
   }
 
@@ -24,14 +25,20 @@ export default class MarkupArtifactCleaner {
     // implement me
   }
 
-  private static escapeRegExp(reString: string) {
-    // $& means the whole matched string
-    return reString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
   private collapseNewlines(): void {
     const result = this.getMarkup().replace(/\n+/g, '\n');
     this.setMarkup(result);
+  }
+
+  private removeDivs(): void {
+    const divRE = /<\/?div.*?>/g;
+    const result = this.getMarkup().replace(divRE, '');
+    this.setMarkup(result);
+  }
+
+  private static escapeRegExp(reString: string) {
+    // $& means the whole matched string
+    return reString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   public getMarkup() {

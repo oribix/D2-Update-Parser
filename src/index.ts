@@ -10,7 +10,7 @@ class App {
     this.init();
 
     const updateFetcher = UpdateArticleFetcher.getInstance();
-    const articles = await updateFetcher.getByPageRange(1, 15);
+    const articles = await updateFetcher.getByPageRange(1, 5);
     articles.reverse().forEach((article, i) => {
       const fp = this.getFilePath(article);
 
