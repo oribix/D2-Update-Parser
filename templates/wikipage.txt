@@ -1,2 +1,7 @@
+<div style="float: right;">
 {{versionInfoBox}}
+<br/>
+<div class="toclimit-2" style="float: right;">__TOC__</div>
+</div>
+
 {{content}}
