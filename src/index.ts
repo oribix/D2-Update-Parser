@@ -10,7 +10,12 @@ class App {
     this.init();
 
     const updateFetcher = UpdateArticleFetcher.getInstance();
-    const articles = await updateFetcher.getByPageRange(1, 5);
+    const depth = Number.parseInt(process.argv[2], 10) || 5;
+    const articles = await updateFetcher.getByPageRange(1, depth);
+    this.convertArticlesToWikiPages(articles);
+  }
+
+  public static convertArticlesToWikiPages(articles: BungieNewsArticle[]) {
     articles.reverse().forEach((article, i) => {
       const fp = this.getFilePath(article);
 
