@@ -1,7 +1,7 @@
 {{=<% %>=}}
 {{Version Infobox
 <%={{ }}=%>
-| Image = {{Image}}
+| Image = 
 | Type = {{UpdateType}}
 | Version ID = {{Version}}
 | Description = {{Description}}
