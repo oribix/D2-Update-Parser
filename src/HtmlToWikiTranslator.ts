@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 import { WikiTranslator } from './interfaces/WikiTranslator';
 
+/**
+ * Converts HTML to MediaWiki Markup Language
+ */
 export default class HtmlToWikiTranslator implements WikiTranslator {
   private html: string;
 

@@ -27,7 +27,8 @@ class App {
       pageFactory.setVersionInfoBoxFactory(vboxFactory);
       fs.ensureFile(fp)
         .then(() => pageFactory.create())
-        .then((page) => fs.writeFile(fp, page));
+        .then((page) => fs.writeFile(fp, page))
+        .then(() => console.log(fp));
     });
   }
 
@@ -41,7 +42,7 @@ class App {
 
     const filename = title.replace(/\//g, '-');
     const folderName = date.replace(/:/g, '-');
-    const fp = `./bin/${folderName}/${filename}.txt`;
+    const fp = `./bin/${folderName} - ${filename}.txt`;
     return fp;
   }
 }
