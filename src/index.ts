@@ -40,10 +40,10 @@ class App {
     const title: string = article.getTitle();
     const date = article.getCreationDate();
 
-    const filename = title.replace(/\//g, '-');
-    const folderName = date.replace(/:/g, '-');
-    const fp = `./bin/${folderName} - ${filename}.txt`;
-    return fp;
+    const formattedTitle = title.replace(/\//g, '-');
+    const formattedDate = date.replace(/:/g, '-');
+    const filePath = `./bin/${formattedDate} - ${formattedTitle}.mediawiki`;
+    return filePath;
   }
 }
 
